@@ -112,6 +112,13 @@ int main(int argc, const char * argv[])
 	std::cout << "Search in quad tree: " << searchQuadTreeSeconds << " seconds  -> In 1 second: " << (nPoints/searchQuadTreeSeconds) << " searches" << std::endl;
 	std::cout << "Quadtree total time: " << (instantiateSetSeconds + searchSetSeconds) << " seconds" << std::endl;
 	
+	
+	for (std::set<XYObject *>::iterator it = segmentsSet.begin(); it != segmentsSet.end(); ++it)
+	{
+		delete *it;
+	}
+	segmentsSet.clear();
+	
     return 0;
 }
 

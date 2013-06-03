@@ -58,6 +58,7 @@ class XYObject
 {
 
 public:
+	virtual ~XYObject();
 	virtual bool isContainedOrIntersectsBoundary(const Boundary &b) const = 0;
 	virtual bool operator<(const XYObject &other) const = 0;
 	virtual float distanceToPoint(XY &point) const = 0;

@@ -19,7 +19,7 @@ private:
 	int _capacity;
 	Boundary _boundary;
 	std::set<XYObject *> _objects;
-	QuadTree *_parent;
+	
 	QuadTree *_northWest;
 	QuadTree *_northEast;
 	QuadTree *_southWest;

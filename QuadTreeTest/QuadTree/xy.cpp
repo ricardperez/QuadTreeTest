@@ -7,3 +7,8 @@
 //
 
 #include "xy.h"
+
+XYObject::~XYObject()
+{
+	
+}

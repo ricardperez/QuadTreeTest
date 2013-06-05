@@ -16,7 +16,7 @@
 class QuadTree
 {
 private:
-	int _capacity;
+	const int _capacity;
 	Boundary _boundary;
 	std::set<XYObject *> _objects;
 	
@@ -29,7 +29,7 @@ private:
 	void getObjectsCloseToBoundary(Boundary boundary, std::set<XYObject *> &objects);
 	
 public:
-	QuadTree(float centerX, float centerY, float halfWidth, float halfHeight);
+	QuadTree(float centerX, float centerY, float halfWidth, float halfHeight, int capacity);
 	~QuadTree();
 	bool addObject(XYObject *object);
 	std::set<XYObject *> getObjectsCloseToBoundary(float centerX, float centerY, float halfWidth, float halfHeight);

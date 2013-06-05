@@ -8,15 +8,13 @@
 
 #include "quad_tree.h"
 
-QuadTree::QuadTree(float centerX, float centerY, float halfWidth, float halfHeight) :
-_boundary(XY(centerX, centerY), XY(halfWidth, halfHeight))
+QuadTree::QuadTree(float centerX, float centerY, float halfWidth, float halfHeight, int capacity) :
+_boundary(XY(centerX, centerY), XY(halfWidth, halfHeight)), _capacity(capacity)
 {
 	this->_northWest = 0;
 	this->_northEast = 0;
 	this->_southWest = 0;
 	this->_southEast = 0;
-	
-	this->_capacity = 10;
 }
 
 QuadTree::~QuadTree()
@@ -37,10 +35,10 @@ void QuadTree::subdivide()
 	float quarterWidth = halfWidth*0.5f;
 	float quarterHeight = halfHeight*0.5f;
 	
-	this->_northWest = new QuadTree(centerX - quarterWidth, centerY - quarterHeight, quarterWidth, quarterHeight);
-	this->_northEast = new QuadTree(centerX + quarterWidth, centerY - quarterHeight, quarterWidth, quarterHeight);
-	this->_southWest = new QuadTree(centerX - quarterWidth, centerY + quarterHeight, quarterWidth, quarterHeight);
-	this->_southEast = new QuadTree(centerX + quarterWidth, centerY + quarterHeight, quarterWidth, quarterHeight);
+	this->_northWest = new QuadTree(centerX - quarterWidth, centerY - quarterHeight, quarterWidth, quarterHeight, this->_capacity);
+	this->_northEast = new QuadTree(centerX + quarterWidth, centerY - quarterHeight, quarterWidth, quarterHeight, this->_capacity);
+	this->_southWest = new QuadTree(centerX - quarterWidth, centerY + quarterHeight, quarterWidth, quarterHeight, this->_capacity);
+	this->_southEast = new QuadTree(centerX + quarterWidth, centerY + quarterHeight, quarterWidth, quarterHeight, this->_capacity);
 	
 	/*
 	 When subdiving, we have to relocate the objects to the correct child.
@@ -64,17 +62,26 @@ bool QuadTree::addObject(XYObject *object)
 		return false;
 	}
 	
-	if (this->_objects.size() < this->_capacity)
-	{
-		this->_objects.insert(object);
-		return true;
-	}
-	
-	
+	/*
+	 If it has no childs, we will try to add it to its container. But if limit
+	 of elements is reached, then this leaf will be splitted to 4 new nodes and
+	 its elements will be set to the correct one and this object will be added
+	 to the correct child(s).
+	 */
 	if (this->_northWest == 0)
 	{
-		this->subdivide();
+		if (this->_objects.size() < this->_capacity)
+		{
+			this->_objects.insert(object);
+			return true;
+		} else
+		{
+			this->subdivide();
+		}
 	}
+	
+	
+//	return (this->_northWest->addObject(object) || this->_northEast->addObject(object) || this->_southWest->addObject(object) || this->_southEast->addObject(object));
 	
 	bool inNorthWest = this->_northWest->addObject(object);
 	bool inNorthEast = this->_northEast->addObject(object);
